@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.13)
+project(Aplikacja_tetris)
+set(PROJECT_ID apk)
+set(CMAKE_CXX_STANDARD 20)
+
+include_directories(include)
+
+set(SOURCE_FILES
+        src/siatka.cpp
+        src/window.cpp
+)
+
+add_executable(${PROJECT_ID}
+        main.cpp
+        ${SOURCE_FILES}
+)
