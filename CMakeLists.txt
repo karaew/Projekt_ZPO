@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(include)
 
 set(SOURCE_FILES
+        src/block.cpp
         src/siatka.cpp
-        src/window.cpp
 )
 
 add_executable(${PROJECT_ID}
