@@ -5,8 +5,7 @@
 #ifndef PROJEKT_ZPO_SIATKA_HPP
 #define PROJEKT_ZPO_SIATKA_HPP
 #include <vector>
-#include <string>
-#include <stdexcept>
+
 
 class Block {
 public:
@@ -23,13 +22,12 @@ class figure {
     public:
     char typ_;
     std::vector <Block> blocks_;
-    std::vector<std::vector<Block>> state;
 
-    figure(char typ_);
+    explicit figure(char typ_);
+
     void move_L();
     void move_R();
     void rotate();
-
 };
 
 

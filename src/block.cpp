@@ -1,6 +1,7 @@
 #include "../include/block.hpp"
 
 
+#include <stdexcept>
 
 Block::Block(const int x, const int y, bool alive) {
     x_ = 5 + x;
@@ -68,3 +69,5 @@ void figure::rotate() {
         }
     }
 }
+
+

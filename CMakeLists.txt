@@ -7,7 +7,8 @@ include_directories(include)
 
 set(SOURCE_FILES
         src/block.cpp
-        src/siatka.cpp
+        src/grid.cpp
+        src/game_logic.cpp
 )
 
 add_executable(${PROJECT_ID}
