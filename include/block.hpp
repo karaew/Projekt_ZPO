@@ -6,30 +6,30 @@
 #define PROJEKT_ZPO_SIATKA_HPP
 #include <vector>
 
+#define size_of_Block 4
 
 class Block {
 public:
     int x_;
     int y_;
-    bool alive_;
-    Block(int x, int y, bool alive = true);
+    mutable bool alive_;
+    Block(int x = 0, int y = 0, bool alive = true);
 
     void fall(int time);
     ~Block() = default;
 };
 
-class figure {
+class Figure {
     public:
     char typ_;
     std::vector <Block> blocks_;
 
-    explicit figure(char typ_);
+    explicit Figure(char typ_);
 
     void move_L();
     void move_R();
     void rotate();
 };
-
 
 
 

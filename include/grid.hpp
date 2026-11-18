@@ -12,23 +12,38 @@
 #define Window_width 64
 #define Window_height 128
 
+extern int size_of_Block;
+
 class Pixel {
     bool occupied_;
 public:
     Pixel() : occupied_(false), x_(0), y_(0) {};
 
-    void zamien() {occupied_ = !occupied_;}
+    void swap() {occupied_ = !occupied_;}
+    bool check() const {return occupied_;}
     int x_;
     int y_;
 };
 
 class Window {
-    public:
     std::vector<std::vector<Pixel>> window_;
+public:
+    Window(int height = Window_height, int width = Window_width);
 
-    Window(int heigt = Window_height, int width = Window_width);
+    std::vector<Pixel>& operator[](const int a) {return window_[a];}
+    const std::vector<Pixel>& operator[](const int a) const {return window_[a];}
+
 };
 
+class GameBoard {
+    std::vector<std::vector<int>> board_;
+    public:
+    GameBoard(int height = 20, int width = 10) : board_(height, std::vector<int>(width, 0)) {};
+
+    std::vector<int>& operator[](const int a) {return board_[a];}
+    const std::vector<int>& operator[](const int a) const {return board_[a];}
+
+};
 
 
 #endif //PROJEKT_ZPO_WINDOW_HPP

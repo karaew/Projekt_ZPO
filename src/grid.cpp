@@ -1,7 +1,7 @@
 
 #include "../include/grid.hpp"
 
-Window::Window(int height, int width) {
+Window::Window(const int height, const int width) {
     std::vector<std::vector<Pixel>> result(height, std::vector<Pixel>(width));
     int y = Window_height;
     for (auto &row : result) {
@@ -15,3 +15,4 @@ Window::Window(int height, int width) {
     }
     window_ = result;
 };
+

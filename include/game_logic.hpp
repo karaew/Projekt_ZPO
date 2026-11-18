@@ -5,23 +5,26 @@
 #ifndef APLIKACJA_TETRIS_GAME_LOGIC_HPP
 #define APLIKACJA_TETRIS_GAME_LOGIC_HPP
 
+#include <utility>
 #include <vector>
 
-#include <grid.hpp>
 #include "block.hpp"
+#include "grid.hpp"
+
 
 class GameLogic {
-    int size_of_Block_;
     int score_;
-
+    Window window_;
+    GameBoard board_;
     public:
-    GameLogic(int const size_of_Block) : size_of_Block_(size_of_Block), score_(0) {};
+    GameLogic(Window window, GameBoard board) : score_(0),  window_(std::move(window)), board_(std::move(board)) {};
 
     std::vector<int> PixelToBlock(int pos_x, int pos_y) const;
 
-    int BlockToPixel(int pos_x, int pos_y) const;
+    std::vector<std::vector<int>> BlockToPixel(int pos_x, int pos_y) const;
 
-    void is_block();
+    void can_block_fall(const Figure &figure);
+
 };
 
 #endif //APLIKACJA_TETRIS_GAME_LOGIC_HPP
