@@ -45,3 +45,4 @@ void GameLogic::can_block_fall(const Figure &figure) {
         }
     }
 }
+

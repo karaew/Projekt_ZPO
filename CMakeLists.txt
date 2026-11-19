@@ -6,12 +6,12 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(include)
 
 set(SOURCE_FILES
-        src/block.cpp
         src/grid.cpp
         src/game_logic.cpp
+        src/block.cpp
 )
 
 add_executable(${PROJECT_ID}
-        main.cpp
+        src/main.cpp
         ${SOURCE_FILES}
 )
