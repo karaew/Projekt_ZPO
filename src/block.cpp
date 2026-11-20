@@ -1,11 +1,8 @@
 #include "../include/block.hpp"
 
 
-#include <stdexcept>
 
 Block::Block(const int x, const int y, bool alive) {
-    // 5 oraz 20 ustawiają bloczki na domyslnym
-    // miejscu pojawiania sie bloczkow na planszy gry.
     x_ = x;
     y_ = y;
     alive_ = alive;
@@ -13,7 +10,7 @@ Block::Block(const int x, const int y, bool alive) {
 
 void Block::fall(const int time) {
     if (alive_) {
-        if (time == 60 ) {
+        if (time == change_time) {
             y_ = y_ - 1;
         }
     }
@@ -22,28 +19,47 @@ void Block::fall(const int time) {
 Figure::Figure(const char typ_) : typ_(typ_){
     switch (typ_) {
         case 'I':
-            blocks_ = {{4, 20}, {5, 20}, {6, 20}, {7, 20}};
+            blocks_[0] = Block(4, 20);
+            blocks_[1] = Block(5, 20);
+            blocks_[2] = Block(6, 20);
+            blocks_[3] = Block(7, 20);
             break;
         case 'T':
-            blocks_ = {{4, 19}, {5, 19}, {6, 19}, {5, 20}};
+            blocks_[0] = Block(4, 19);
+            blocks_[1] = Block(5, 19);
+            blocks_[2] = Block(6, 19);
+            blocks_[3] = Block(5, 20);
             break;
         case 'J':
-            blocks_ = {{4, 20}, {4, 19}, {5, 19}, {6, 19}};
+            blocks_[0] = Block(4, 20);
+            blocks_[1] = Block(4, 19);
+            blocks_[2] = Block(5, 19);
+            blocks_[3] = Block(6, 19);
             break;
         case 'L':
-            blocks_ = {{4, 19}, {5, 19}, {6, 19}, {6, 20}};
+            blocks_[0] = Block(4, 19);
+            blocks_[1] = Block(5, 19);
+            blocks_[2] = Block(6, 19);
+            blocks_[3] = Block(6, 20);
             break;
         case 'O':
-            blocks_ = {{5, 20}, {6, 20}, {5, 19}, {6, 19}};
+            blocks_[0] = Block(5, 20);
+            blocks_[1] = Block(6, 20);
+            blocks_[2] = Block(5, 19);
+            blocks_[3] = Block(6, 19);
             break;
         case 's':
-            blocks_ = {{4, 19}, {5, 19}, {5, 20}, {6, 20}};
+            blocks_[0] = Block(4, 19);
+            blocks_[1] = Block(5, 19);
+            blocks_[2] = Block(5, 20);
+            blocks_[3] = Block(6, 20);
             break;
         case 'z':
-            blocks_ = {{4, 20}, {5, 20}, {5, 19}, {6, 19}};
+            blocks_[0] = Block(4, 20);
+            blocks_[1] = Block(5, 20);
+            blocks_[2] = Block(5, 19);
+            blocks_[3] = Block(6, 19);
             break;
-        default:
-            throw std::invalid_argument("Invalid block type");
     }
 }
 void Figure::move_L() {

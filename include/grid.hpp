@@ -6,9 +6,6 @@
 #define PROJEKT_ZPO_WINDOW_HPP
 
 
-#include <vector>
-
-
 #define Window_width 64
 #define Window_height 128
 
@@ -26,23 +23,22 @@ public:
 };
 
 class Window {
-    std::vector<std::vector<Pixel>> window_;
+    Pixel window_[Window_height][Window_width];
+
 public:
     Window(int height = Window_height, int width = Window_width);
 
-    std::vector<Pixel>& operator[](const int a) {return window_[a];}
-    const std::vector<Pixel>& operator[](const int a) const {return window_[a];}
+    Pixel* operator[](const int a) {return window_[a];}
+    const Pixel* operator[](const int a) const {return window_[a];}
 
 };
 
 class GameBoard {
-    std::vector<std::vector<int>> board_;
+    bool board_[20][10]{};
     public:
-    GameBoard(int height = 20, int width = 10) : board_(height, std::vector<int>(width, 0)) {};
 
-    std::vector<int>& operator[](const int a) {return board_[a];}
-    const std::vector<int>& operator[](const int a) const {return board_[a];}
-
+    bool* operator[](const int a) { return board_[a]; }
+    const bool* operator[](const int a) const { return board_[a]; }
 };
 
 

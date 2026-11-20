@@ -2,17 +2,16 @@
 #include "../include/grid.hpp"
 
 Window::Window(const int height, const int width) {
-    std::vector<std::vector<Pixel>> result(height, std::vector<Pixel>(width));
     int y = Window_height;
-    for (auto &row : result) {
+    for (int i = 0; y < height; i++) {
         int x = 0;
-        for (auto &col : row) {
-            col.x_ = x;
-            col.y_ = y;
+        for (int j = 0 ; j < width; j++) {
+            window_[i][j].x_ = x;
+            window_[i][j].y_ = y;
             x++;
         }
         y--;
     }
-    window_ = result;
 };
+
 

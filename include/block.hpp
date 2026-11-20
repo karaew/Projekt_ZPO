@@ -4,9 +4,9 @@
 
 #ifndef PROJEKT_ZPO_SIATKA_HPP
 #define PROJEKT_ZPO_SIATKA_HPP
-#include <vector>
 
 #define size_of_Block 4
+#define change_time 60
 
 class Block {
 public:
@@ -22,7 +22,7 @@ public:
 class Figure {
     public:
     char typ_;
-    std::vector <Block> blocks_;
+    Block blocks_[4];
 
     explicit Figure(char typ_);
 
