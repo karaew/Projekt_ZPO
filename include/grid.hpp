@@ -6,40 +6,22 @@
 #define PROJEKT_ZPO_WINDOW_HPP
 
 
-#define Window_width 64
-#define Window_height 128
+#define Window_width 128
+#define Window_height 64
+#include <stdint.h>
 
-extern int size_of_Block;
-
-class Pixel {
-    bool occupied_;
-public:
-    Pixel() : occupied_(false), x_(0), y_(0) {};
-
-    void swap() {occupied_ = !occupied_;}
-    bool check() const {return occupied_;}
-    int x_;
-    int y_;
-};
 
 class Window {
-    Pixel window_[Window_height][Window_width];
+    uint8_t window_[Window_height * Window_width / 8] = {};
 
 public:
-    Window(int height = Window_height, int width = Window_width);
+    static int byte_idx(const int x, const int y) {return y * Window_width / 8 + x / 8;}
+    static int bit_idx(const int x, const int y) {return x % 8;}
+    bool check(int x, int y) const;
 
-    Pixel* operator[](const int a) {return window_[a];}
-    const Pixel* operator[](const int a) const {return window_[a];}
-
+    void set(int x, int y, bool value);
 };
 
-class GameBoard {
-    bool board_[20][10]{};
-    public:
-
-    bool* operator[](const int a) { return board_[a]; }
-    const bool* operator[](const int a) const { return board_[a]; }
-};
 
 
 #endif //PROJEKT_ZPO_WINDOW_HPP

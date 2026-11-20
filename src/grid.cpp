@@ -1,17 +1,14 @@
 
 #include "../include/grid.hpp"
 
-Window::Window(const int height, const int width) {
-    int y = Window_height;
-    for (int i = 0; y < height; i++) {
-        int x = 0;
-        for (int j = 0 ; j < width; j++) {
-            window_[i][j].x_ = x;
-            window_[i][j].y_ = y;
-            x++;
-        }
-        y--;
-    }
-};
+bool Window::check(const int x, const int y) const {
+    return (window_[byte_idx(x, y)] & (1 << bit_idx(x, y))) != 0;
+}
 
+void Window::set(const int x, const int y, bool value) {
+    if (value == true){
+        window_[byte_idx(x, y)] |= (1 << bit_idx(x, y));
+    }
+    else {window_[byte_idx(x, y)] &= ~(1 << bit_idx(x, y));}
+}
 

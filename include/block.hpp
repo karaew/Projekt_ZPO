@@ -5,7 +5,7 @@
 #ifndef PROJEKT_ZPO_SIATKA_HPP
 #define PROJEKT_ZPO_SIATKA_HPP
 
-#define size_of_Block 4
+#define size_of_Block 4 // z ilu pikseli sklada sie blok
 #define change_time 60
 
 class Block {
