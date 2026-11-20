@@ -23,8 +23,8 @@ int GameLogic::BlockToPixelX(int const pos_x, int const pointer) {
         return -1;
     }
     const int local_x = pointer % side;
-    return pos_x * side + local_x + 24;
-    // wartosc 24 dana na wzglad ze wzglad ze dla poczatku board_ (0, 0) na window_ jest to (20, 24)
+    return pos_x * side + local_x + 4;
+    // wartosc 4 dana na wzglad ze wzglad ze dla poczatku board_ (0, 0) na window_ jest to (4, 20)
 }
 
 int GameLogic::BlockToPixelY(int const pos_y, int const pointer) {
@@ -34,14 +34,14 @@ int GameLogic::BlockToPixelY(int const pos_y, int const pointer) {
     }
     const int local_y = pointer % side;
     return pos_y * side + local_y + 20;
-    // wartosc 24 dana na wzglad ze wzglad ze dla poczatku board_ (0, 0) na window_ jest to (20, 24)
+    // wartosc 20 dana na wzglad ze wzglad ze dla poczatku board_ (0, 0) na window_ jest to (4, 20)
 }
 
-void GameLogic::killPixels_from_Block(const Block &block) {
+void GameLogic::setPixels_from_Block(const Block &block) {
     for (int it = 0; it < size_of_Block; it++) {
         const int current_px_x = BlockToPixelX(block.x_, it);
         const int current_px_y = BlockToPixelY(block.y_, it);
-        window_.set(current_px_x, current_px_y, false);
+        window_.set(current_px_x, current_px_y, true);
     }
 }
 
@@ -58,7 +58,7 @@ void GameLogic::can_block_fall(int const time) {
     for (const auto it : figure_.blocks_) {
         it.alive_ = false;
         window_.set(it.x_, it.y_, true);
-        killPixels_from_Block(it);
+        setPixels_from_Block(it);
         new_figure();
         }
 }
@@ -88,6 +88,27 @@ void GameLogic::can_block_move_L(const int input) {
                 }
             }
             figure_.move_L();
+        }
+    }
+}
+
+void refresh_window(const GameLogic &game) {
+    constexpr int y_max = 62;
+// rozmieszczenie planszy (4, 22) - (22, 62)
+    for (int y = 22; y < y_max; y++) {
+        constexpr int x_max = 24;
+        for (int x = 4; x < x_max; x++) {
+            if (game.window_.check(x, y)) {
+                display.drawPixel(x, y, true);
+            }
+            else {display.drawPixel(x, y, false);}
+        }
+    }
+    for (const auto block : game.figure_.blocks_) {
+        if (block.alive_ == true) {
+            for (int it = 0; it < size_of_Block; it++) {
+                display.drawPixel(GameLogic::BlockToPixelX(block.x_, it), GameLogic::BlockToPixelY(block.y_, it), true);
+            }
         }
     }
 }

@@ -10,15 +10,18 @@
 #include "grid.hpp"
 
 #include <Arduino.h>
+#include <Adafruit_SSD1306.h>
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET    (-1)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-
-
-class GameLogic {
+struct GameLogic {
     int score_;
     Window window_;
     char types[7] {'I', 'T', 'J', 'L', 'O', 's','z'};
     Figure figure_;
-public:
+
     GameLogic(const Window &window) : score_(0),  window_(window), figure_(types[random(0,7)]){};
 
     static int PixelToBlockX(int pos_x) ;
@@ -27,7 +30,7 @@ public:
     static int BlockToPixelX(int pos_x, int pointer);
     static int BlockToPixelY(int pos_y, int pointer) ;
 
-    void killPixels_from_Block(const Block &block);
+    void setPixels_from_Block(const Block &block);
 
     void can_block_fall(int time);
 
@@ -38,5 +41,7 @@ public:
         figure_ = Figure(types[random(0,7)]);
     };
 };
+
+void refresh_window(const GameLogic &game);
 
 #endif //APLIKACJA_TETRIS_GAME_LOGIC_HPP
