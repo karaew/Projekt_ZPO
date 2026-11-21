@@ -76,8 +76,8 @@ void GameLogic::can_block_fall(int const time) {
 void GameLogic::can_block_move_R(const int input) {
     if (digitalRead(input) == LOW) {
         bool check = true;
-            for (const auto & block : figure_.blocks_) {
-                if (window_.check(block.x_ + 1, block.y_) == true || block.x_ == 20) {
+            for (const auto &block : figure_.blocks_) {
+                if (window_.check(Block_To_PixelX(block.x_ + 1, 0), Block_To_PixelY(block.y_, 0)) == true || block.x_ == 10) {
                     check = false;
                     break;
                 }
@@ -92,7 +92,7 @@ void GameLogic::can_block_move_L(const int input) {
     if (digitalRead(input) == LOW) {
         bool check = true;
         for (const auto & block : figure_.blocks_) {
-            if (window_.check(block.x_ - 1, block.y_) == true || block.x_ == 0) {
+            if (window_.check(Block_To_PixelX(block.x_ - 1, 0), Block_To_PixelY(block.y_, 0)) == true || block.x_ == -1) {
                 check = false;
                 break;
             }
