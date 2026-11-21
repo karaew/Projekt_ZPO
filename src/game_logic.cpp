@@ -49,7 +49,7 @@ void GameLogic::can_block_fall(int const time) {
     if (time == change_time) {
         bool check = true;
         for (const auto it : figure_.blocks_) {
-            if (window_.check(it.x_, it.y_ - 1) == 1 || it.y_ == 0) {
+            if (window_.check(Block_To_PixelX(it.x_, 0), Block_To_PixelY(it.y_ - 1, 0)) == 1 || it.y_ == 0) {
                 check = false;
                 break;
             }
@@ -60,9 +60,8 @@ void GameLogic::can_block_fall(int const time) {
             }
         }
         else {
-            for (const auto it : figure_.blocks_) {
+            for (auto &it : figure_.blocks_) {
                 it.alive_ = false;
-                window_.set(it.x_, it.y_, true);
                 set_Pixels_from_Block(it);
             }
             new_figure();
@@ -107,9 +106,9 @@ void GameLogic::can_block_move_L(const int input) {
 void refresh_window(const GameLogic &game) {
     u8g2.firstPage();
     do {
-        constexpr int y_max = 62;
-        // rozmieszczenie planszy (4, 22) - (22, 62)
-        for (int y = 22; y < y_max; y++) {
+        constexpr int y_max = 44;
+        // rozmieszczenie planszy (4, 2) - (22, 42)
+        for (int y = 2; y < y_max; y++) {
             constexpr int x_max = 24;
             for (int x = 4; x < x_max; x++) {
                 if (game.window_.check(x, y)) {
