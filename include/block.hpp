@@ -15,7 +15,7 @@ public:
     mutable bool alive_;
     Block(int x = 0, int y = 0, bool alive = true);
 
-    void fall(int time);
+    void fall();
     ~Block() = default;
 };
 

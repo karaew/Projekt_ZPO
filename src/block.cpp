@@ -8,11 +8,9 @@ Block::Block(const int x, const int y, bool alive) {
     alive_ = alive;
 }
 
-void Block::fall(const int time) {
+void Block::fall() {
     if (alive_) {
-        if (time == change_time) {
-            y_ = y_ - 1;
-        }
+        y_ = y_ - 1;
     }
 }
 

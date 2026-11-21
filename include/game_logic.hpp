@@ -10,19 +10,17 @@
 #include "grid.hpp"
 
 #include <Arduino.h>
-#include <Adafruit_SSD1306.h>
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-#define OLED_RESET    (-1)
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+#include <U8g2lib.h>
+
+extern U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2;
 
 struct GameLogic {
     int score_;
-    Window window_;
+    Window &window_;
     char types[7] {'I', 'T', 'J', 'L', 'O', 's','z'};
     Figure figure_;
 
-    GameLogic(const Window &window) : score_(0),  window_(window), figure_(types[random(0,7)]){};
+    GameLogic(Window &window) : score_(0),  window_(window), figure_(types[random(0,7)]){};
 
     static int PixelToBlockX(int pos_x) ;
     static int PixelToBlockY(int pos_y) ;
