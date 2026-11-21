@@ -33,7 +33,7 @@ int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
         return -1;
     }
     const int local_y = pointer / side;
-    int upside_y = 20 - pos_y;
+    const int upside_y = 20 - pos_y;
     return upside_y * side + local_y + 2;
 }
 
@@ -55,7 +55,7 @@ void GameLogic::can_block_fall(int const time) {
             }
         }
         if (check) {
-            for (auto it : figure_.blocks_) {
+            for (auto &it : figure_.blocks_) {
                 it.fall();
             }
         }
@@ -64,8 +64,8 @@ void GameLogic::can_block_fall(int const time) {
                 it.alive_ = false;
                 window_.set(it.x_, it.y_, true);
                 set_Pixels_from_Block(it);
-                new_figure();
             }
+            new_figure();
         }
     }
     refresh_window(*this);
