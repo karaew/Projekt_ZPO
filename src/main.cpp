@@ -11,6 +11,7 @@ constexpr int LED_PIN_R = 12;
 constexpr int LED_PIN_L = 11;
 constexpr int LED_PIN_Rotate = 10;
 constexpr int LED_PIN_Fall = 9;
+
 GameLogic game;
 
 void setup() {
@@ -20,8 +21,6 @@ void setup() {
    randomSeed(2137);
 
    game.new_figure();
-
-
 
    pinMode(LED_PIN_R, OUTPUT);
    pinMode(LED_PIN_L, OUTPUT);
@@ -68,7 +67,5 @@ void loop() {
    }
 
    game.can_block_fall(current_frame);
-   refresh_window(game);
    current_frame ++;
-
 }

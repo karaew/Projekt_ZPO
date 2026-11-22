@@ -34,22 +34,18 @@ int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
     }
     const int local_y = pointer / side;
     const int upside_y = 20 - pos_y;
-    return upside_y * side + local_y + 4;
+    return upside_y * side + local_y + 2;
 }
 
 void GameLogic::set_Pixels_from_Block(const Block &block) {
-    for (int it = 0; it < size_of_Block; it++) {
-        const int current_px_x = Block_To_PixelX(block.x_, it);
-        const int current_px_y = Block_To_PixelY(block.y_, it);
-        window_.set(current_px_x, current_px_y, true);
-    }
+    window_.set(block.x_, block.y_, true);
 }
 
 void GameLogic::can_block_fall(int const time) {
     if (time == change_time) {
         bool check = true;
         for (const auto it : figure_.blocks_) {
-            if (window_.check(Block_To_PixelX(it.x_, 0), Block_To_PixelY(it.y_ - 1, 0)) == 1 || it.y_ == 0) {
+            if (window_.check(it.x_, it.y_ - 1) == true || it.y_ == 0) {
                 check = false;
                 break;
             }
@@ -75,7 +71,7 @@ bool GameLogic::can_block_move_R() {
     bool check = true;
     for (const auto &block : figure_.blocks_) {
         for (int it = 0; it < size_of_Block; it++) {
-            if (window_.check(Block_To_PixelX(block.x_ + 1, it), Block_To_PixelY(block.y_, 0)) == true || block.x_ >= 9) {
+            if (window_.check(block.x_ + 1, block.y_) == true || block.x_ >= 9) {
                 check = false;
                 break;
             }
@@ -91,7 +87,7 @@ bool GameLogic::can_block_move_L() {
     bool check = true;
     for (const auto & block : figure_.blocks_) {
         for (int it = 0; it < size_of_Block; it++) {
-            if (window_.check(Block_To_PixelX(block.x_ - 1, 0), Block_To_PixelY(block.y_, 0)) == true || block.x_ <= 0) {
+            if (window_.check(block.x_ - 1, block.y_) == true || block.x_ <= 0) {
                 check = false;
                 break;
             }
@@ -107,18 +103,11 @@ bool GameLogic::can_block_move_L() {
 void refresh_window(const GameLogic &game) {
     u8g2.firstPage();
     do {
-        constexpr int y_max = 64;
-        // rozmieszczenie planszy (4, 2) - (34, 64)
-        for (int y = 2; y < y_max; y++) {
-            constexpr int x_max = 34;
-            for (int x = 2; x < x_max; x++) {
-                if (game.window_.check(x, y)) {
+        for (int y = 0; y < Game_Window_height; y++) {
+            for (int x = 0; x < Game_Window_width; x++) {
+                if (game.window_.check(x, y) == true) {
                     u8g2.setDrawColor(1);
-                    u8g2.drawPixel(x, y);
-                }
-                else {
-                    u8g2.setDrawColor(0);
-                    u8g2.drawPixel(x, y);
+                    u8g2.drawFrame(GameLogic::Block_To_PixelX(x, 0), GameLogic::Block_To_PixelY(y, 0), static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
                 }
             }
         }
@@ -152,8 +141,7 @@ void GameLogic::can_block_rotate() {
                 const int min = 0 + figure_.blocks_[1].x_ + dx;
                 if (min < shift) {shift = min;}
             }
-            if (window_.check(Block_To_PixelX(figure_.blocks_[1].x_ + dx, 0),
-                              Block_To_PixelY(figure_.blocks_[1].y_ + dy, 0)) == true) {
+            if (window_.check(figure_.blocks_[1].x_ + dx, figure_.blocks_[1].y_ + dy) == true) {
                 shift = -3;
                               }
         }

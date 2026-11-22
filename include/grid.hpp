@@ -8,11 +8,13 @@
 
 #define Window_width 128
 #define Window_height 64
+#define Game_Window_width 10
+#define Game_Window_height 20
 #include <stdint.h>
 
 
 class Window {
-    uint8_t window_[Window_height * Window_width / 8] = {};
+    uint8_t window_[Game_Window_height * Game_Window_width / 8] = {};
 
 public:
     static int byte_idx(const int x, const int y) {return y * Window_width / 8 + x / 8;}
@@ -20,6 +22,7 @@ public:
     bool check(int x, int y) const;
 
     void set(int x, int y, bool value);
+
 };
 
 
