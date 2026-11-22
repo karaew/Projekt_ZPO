@@ -43,6 +43,7 @@ public:
     };
 };
 
-void refresh_window(const GameLogic &game);
+void refresh_window(GameLogic &game);
+void clear_lane(GameLogic &game, int row_y);
 
 #endif //APLIKACJA_TETRIS_GAME_LOGIC_HPP

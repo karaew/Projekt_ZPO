@@ -9,9 +9,7 @@ Block::Block(const int x, const int y, bool alive) {
 }
 
 void Block::fall() {
-    if (alive_) {
-        y_ = y_ + 1;
-    }
+    y_ = y_ + 1;
 }
 
 Figure::Figure(const char typ_) : typ_(typ_){
@@ -84,7 +82,7 @@ void Figure::rotate() {
                 int dx = block.x_ - blocks_[1].x_;
                 int dy = block.y_ - blocks_[1].y_;
                 int const temp = dx;
-                dx = dy;
+                dx = -dy;
                 dy = temp;
                 block.x_ = blocks_[1].x_ + dx;
                 block.y_ = blocks_[1].y_ + dy;

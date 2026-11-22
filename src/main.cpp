@@ -18,7 +18,7 @@ void setup() {
    Serial.begin(9200);
    u8g2.begin();
 
-   randomSeed(2137);
+   randomSeed(42069);
 
    game.new_figure();
 
@@ -68,4 +68,5 @@ void loop() {
 
    game.can_block_fall(current_frame);
    current_frame ++;
+   delay(50);
 }
