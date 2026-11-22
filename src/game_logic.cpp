@@ -71,37 +71,38 @@ void GameLogic::can_block_fall(int const time) {
 }
 
 
-// Do zmiany zasada dzialania can_block_move_R oraz can_block_move_L
-
-void GameLogic::can_block_move_R(const int input) {
-    if (digitalRead(input) == LOW) {
-        bool check = true;
-            for (const auto &block : figure_.blocks_) {
-                if (window_.check(Block_To_PixelX(block.x_ + 1, 0), Block_To_PixelY(block.y_, 0)) == true || block.x_ == 10) {
-                    check = false;
-                    break;
-                }
-            }
-        if (check) {
-            figure_.move_R();
-        }
-    }
-}
-
-void GameLogic::can_block_move_L(const int input) {
-    if (digitalRead(input) == LOW) {
-        bool check = true;
-        for (const auto & block : figure_.blocks_) {
-            if (window_.check(Block_To_PixelX(block.x_ - 1, 0), Block_To_PixelY(block.y_, 0)) == true || block.x_ == -1) {
+bool GameLogic::can_block_move_R() {
+    bool check = true;
+    for (const auto &block : figure_.blocks_) {
+        for (int it = 0; it < size_of_Block; it++) {
+            if (window_.check(Block_To_PixelX(block.x_ + 1, it), Block_To_PixelY(block.y_, 0)) == true || block.x_ >= 9) {
                 check = false;
                 break;
             }
         }
-        if (check) {
-            figure_.move_R();
+    }
+    if (check) {
+        figure_.move_R();
+    }
+    return check;
+}
+
+bool GameLogic::can_block_move_L() {
+    bool check = true;
+    for (const auto & block : figure_.blocks_) {
+        for (int it = 0; it < size_of_Block; it++) {
+            if (window_.check(Block_To_PixelX(block.x_ - 1, 0), Block_To_PixelY(block.y_, 0)) == true || block.x_ <= 0) {
+                check = false;
+                break;
+            }
         }
     }
+    if (check) {
+        figure_.move_L();
+    }
+    return check;
 }
+
 
 void refresh_window(const GameLogic &game) {
     u8g2.firstPage();
@@ -131,4 +132,49 @@ void refresh_window(const GameLogic &game) {
         }
     }
     while (u8g2.nextPage());
+}
+
+
+void GameLogic::can_block_rotate() {
+    int shift = 0;
+    for (const auto &block : figure_.blocks_) {
+        if (block.alive_ == true) {
+            int dx = block.x_ - figure_.blocks_[1].x_;
+            int dy = block.y_ - figure_.blocks_[1].y_;
+            int const temp = dx;
+            dx = dy;
+            dy = temp;
+            if  (figure_.blocks_[1].x_ + dx >= 10) {
+                const int max = figure_.blocks_[1].x_ + dx - 10;
+                if (max > shift){shift = max;};
+            }
+            if  (figure_.blocks_[1].x_ + dx < 0) {
+                const int min = 0 + figure_.blocks_[1].x_ + dx;
+                if (min < shift) {shift = min;}
+            }
+            if (window_.check(Block_To_PixelX(figure_.blocks_[1].x_ + dx, 0),
+                              Block_To_PixelY(figure_.blocks_[1].y_ + dy, 0)) == true) {
+                shift = -3;
+                              }
+        }
+    }
+    switch (shift) {
+        case 0: figure_.rotate();
+            break;
+        case 1: figure_.move_L();
+            figure_.rotate();
+            break;
+        case 2: figure_.move_L();
+            figure_.move_L();
+            figure_.rotate();
+            break;
+        case -1: figure_.move_R();
+            figure_.rotate();
+            break;
+        case -2 :
+            figure_.move_R();
+            figure_.move_R();
+            figure_.rotate();
+        default : break;
+    }
 }

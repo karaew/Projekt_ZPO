@@ -33,8 +33,10 @@ public:
 
     void can_block_fall(int time);
 
-    void can_block_move_R(int input);
-    void can_block_move_L(int input);
+    bool can_block_move_R();
+    bool can_block_move_L();
+
+    void can_block_rotate();
 
     void new_figure() {
         figure_ = Figure(types[random(0,7)]);
