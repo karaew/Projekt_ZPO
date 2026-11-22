@@ -10,19 +10,23 @@ U8G2_SH1106_128X64_NONAME_1_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 constexpr int LED_PIN_R = 12;
 constexpr int LED_PIN_L = 11;
 constexpr int LED_PIN_Rotate = 10;
+constexpr int LED_PIN_Fall = 9;
 GameLogic game;
 
 void setup() {
-   Serial.begin(9600);
+   Serial.begin(9200);
    u8g2.begin();
 
    randomSeed(2137);
 
    game.new_figure();
 
+
+
    pinMode(LED_PIN_R, OUTPUT);
    pinMode(LED_PIN_L, OUTPUT);
    pinMode(LED_PIN_Rotate, OUTPUT);
+   pinMode(LED_PIN_Fall, OUTPUT);
 }
 
 int current_frame = 0;
@@ -55,6 +59,11 @@ void loop() {
          game.can_block_rotate();
          digitalWrite(LED_PIN_Rotate, LOW);
          refresh_window(game);
+      }
+      if (odebranyZnak == '2') {
+         digitalWrite(LED_PIN_Fall, HIGH);
+         game.can_block_fall(change_time);
+         digitalWrite(LED_PIN_Fall, LOW);
       }
    }
 

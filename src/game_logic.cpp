@@ -34,7 +34,7 @@ int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
     }
     const int local_y = pointer / side;
     const int upside_y = 20 - pos_y;
-    return upside_y * side + local_y + 2;
+    return upside_y * side + local_y + 4;
 }
 
 void GameLogic::set_Pixels_from_Block(const Block &block) {
@@ -107,11 +107,11 @@ bool GameLogic::can_block_move_L() {
 void refresh_window(const GameLogic &game) {
     u8g2.firstPage();
     do {
-        constexpr int y_max = 44;
-        // rozmieszczenie planszy (4, 2) - (22, 42)
+        constexpr int y_max = 64;
+        // rozmieszczenie planszy (4, 2) - (34, 64)
         for (int y = 2; y < y_max; y++) {
-            constexpr int x_max = 24;
-            for (int x = 4; x < x_max; x++) {
+            constexpr int x_max = 34;
+            for (int x = 2; x < x_max; x++) {
                 if (game.window_.check(x, y)) {
                     u8g2.setDrawColor(1);
                     u8g2.drawPixel(x, y);
@@ -145,7 +145,7 @@ void GameLogic::can_block_rotate() {
             dx = dy;
             dy = temp;
             if  (figure_.blocks_[1].x_ + dx >= 10) {
-                const int max = figure_.blocks_[1].x_ + dx - 10;
+                const int max = figure_.blocks_[1].x_ + dx - 9;
                 if (max > shift){shift = max;};
             }
             if  (figure_.blocks_[1].x_ + dx < 0) {
