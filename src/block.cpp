@@ -10,53 +10,53 @@ Block::Block(const int x, const int y, bool alive) {
 
 void Block::fall() {
     if (alive_) {
-        y_ = y_ - 1;
+        y_ = y_ + 1;
     }
 }
 
 Figure::Figure(const char typ_) : typ_(typ_){
     switch (typ_) {
         case 'I':
-            blocks_[0] = Block(4, 20);
-            blocks_[1] = Block(5, 20);
-            blocks_[2] = Block(6, 20);
-            blocks_[3] = Block(7, 20);
+            blocks_[0] = Block(4, 0);
+            blocks_[1] = Block(5, 0);
+            blocks_[2] = Block(6, 0);
+            blocks_[3] = Block(7, 0);
             break;
         case 'T':
-            blocks_[0] = Block(4, 19);
-            blocks_[1] = Block(5, 19);
-            blocks_[2] = Block(6, 19);
-            blocks_[3] = Block(5, 20);
+            blocks_[0] = Block(4, 1);
+            blocks_[1] = Block(5, 1);
+            blocks_[2] = Block(6, 1);
+            blocks_[3] = Block(5, 0);
             break;
         case 'J':
-            blocks_[0] = Block(4, 20);
-            blocks_[1] = Block(4, 19);
-            blocks_[2] = Block(5, 19);
-            blocks_[3] = Block(6, 19);
+            blocks_[0] = Block(4, 0);
+            blocks_[1] = Block(4, 1);
+            blocks_[2] = Block(5, 1);
+            blocks_[3] = Block(6, 1);
             break;
         case 'L':
-            blocks_[0] = Block(4, 19);
-            blocks_[1] = Block(5, 19);
-            blocks_[2] = Block(6, 19);
-            blocks_[3] = Block(6, 20);
+            blocks_[0] = Block(4, 1);
+            blocks_[1] = Block(5, 1);
+            blocks_[2] = Block(6, 1);
+            blocks_[3] = Block(6, 0);
             break;
         case 'O':
-            blocks_[0] = Block(5, 20);
-            blocks_[1] = Block(6, 20);
-            blocks_[2] = Block(5, 19);
-            blocks_[3] = Block(6, 19);
+            blocks_[0] = Block(5, 0);
+            blocks_[1] = Block(6, 0);
+            blocks_[2] = Block(5, 1);
+            blocks_[3] = Block(6, 1);
             break;
         case 's':
-            blocks_[0] = Block(4, 19);
-            blocks_[1] = Block(5, 19);
-            blocks_[2] = Block(5, 20);
-            blocks_[3] = Block(6, 20);
+            blocks_[0] = Block(4, 1);
+            blocks_[1] = Block(5, 1);
+            blocks_[2] = Block(5, 0);
+            blocks_[3] = Block(6, 0);
             break;
         case 'z':
-            blocks_[0] = Block(4, 20);
-            blocks_[1] = Block(5, 20);
-            blocks_[2] = Block(5, 19);
-            blocks_[3] = Block(6, 19);
+            blocks_[0] = Block(4, 0);
+            blocks_[1] = Block(5, 0);
+            blocks_[2] = Block(5, 1);
+            blocks_[3] = Block(6, 1);
             break;
     }
 }
