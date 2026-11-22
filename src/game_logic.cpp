@@ -4,8 +4,6 @@
 
 #include "../include/game_logic.hpp"
 
-// funkcje zamieniajace wspolrzedne beda opierane na tym ze
-// wspolrzedne (0,0) dla board znajduja sie na wspolrzednych (
 
 int GameLogic::PixelToBlockX(int const pos_x) {
     const int block_pos_x = pos_x/size_of_Block;
@@ -24,7 +22,6 @@ int GameLogic::Block_To_PixelX(int const pos_x, int const pointer) {
     }
     const int local_x = pointer % side;
     return pos_x * side + local_x + 4;
-    // wartosc 4 dana na wzglad ze wzglad ze dla poczatku board_ (0, 0) na window_ jest to (4, 20)
 }
 
 int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
@@ -33,8 +30,7 @@ int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
         return -1;
     }
     const int local_y = pointer / side;
-    const int upside_y = 20 - pos_y;
-    return upside_y * side + local_y + 2;
+    return pos_y * side + local_y + 1;
 }
 
 void GameLogic::set_Pixels_from_Block(const Block &block) {
@@ -45,7 +41,7 @@ void GameLogic::can_block_fall(int const time) {
     if (time == change_time) {
         bool check = true;
         for (const auto it : figure_.blocks_) {
-            if (window_.check(it.x_, it.y_ - 1) == true || it.y_ == 0) {
+            if (it.y_ == 19 || window_.check(it.x_, it.y_ + 1) == true ) {
                 check = false;
                 break;
             }
@@ -70,11 +66,9 @@ void GameLogic::can_block_fall(int const time) {
 bool GameLogic::can_block_move_R() {
     bool check = true;
     for (const auto &block : figure_.blocks_) {
-        for (int it = 0; it < size_of_Block; it++) {
-            if (window_.check(block.x_ + 1, block.y_) == true || block.x_ >= 9) {
-                check = false;
-                break;
-            }
+        if (window_.check(block.x_ + 1, block.y_) == true || block.x_ >= 9) {
+            check = false;
+            break;
         }
     }
     if (check) {
@@ -86,11 +80,9 @@ bool GameLogic::can_block_move_R() {
 bool GameLogic::can_block_move_L() {
     bool check = true;
     for (const auto & block : figure_.blocks_) {
-        for (int it = 0; it < size_of_Block; it++) {
-            if (window_.check(block.x_ - 1, block.y_) == true || block.x_ <= 0) {
-                check = false;
-                break;
-            }
+        if (window_.check(block.x_ - 1, block.y_) == true || block.x_ <= 0) {
+            check = false;
+            break;
         }
     }
     if (check) {
@@ -107,16 +99,15 @@ void refresh_window(const GameLogic &game) {
             for (int x = 0; x < Game_Window_width; x++) {
                 if (game.window_.check(x, y) == true) {
                     u8g2.setDrawColor(1);
-                    u8g2.drawFrame(GameLogic::Block_To_PixelX(x, 0), GameLogic::Block_To_PixelY(y, 0), static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
+                    u8g2.drawBox(GameLogic::Block_To_PixelX(x, 0), GameLogic::Block_To_PixelY(y, 0),
+                                 static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
                 }
             }
         }
         for (const auto block : game.figure_.blocks_) {
             if (block.alive_ == true) {
-                for (int it = 0; it < size_of_Block; it++) {
-                    u8g2.setDrawColor(1);
-                    u8g2.drawPixel(GameLogic::Block_To_PixelX(block.x_, it), GameLogic::Block_To_PixelY(block.y_, it));
-                }
+                u8g2.setDrawColor(1);
+                u8g2.drawBox(GameLogic::Block_To_PixelX(block.x_, 0), GameLogic::Block_To_PixelY(block.y_, 0), static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
             }
         }
     }

@@ -17,8 +17,8 @@ class Window {
     uint8_t window_[Game_Window_height * Game_Window_width / 8] = {};
 
 public:
-    static int byte_idx(const int x, const int y) {return y * Window_width / 8 + x / 8;}
-    static int bit_idx(const int x, const int y) {return x % 8;}
+    static int byte_idx(const int x, const int y) {return (y * Game_Window_width + x) / 8;}
+    static int bit_idx(const int x, const int y) {return (y * Game_Window_width + x) % 8;}
     bool check(int x, int y) const;
 
     void set(int x, int y, bool value);
