@@ -82,8 +82,8 @@ void Figure::rotate() {
                 int dx = block.x_ - blocks_[1].x_;
                 int dy = block.y_ - blocks_[1].y_;
                 int const temp = dx;
-                dx = -dy;
-                dy = temp;
+                dx = dy;
+                dy = -temp;
                 block.x_ = blocks_[1].x_ + dx;
                 block.y_ = blocks_[1].y_ + dy;
             }

@@ -21,7 +21,9 @@ int GameLogic::Block_To_PixelX(int const pos_x, int const pointer) {
         return -1;
     }
     const int local_x = pointer % side;
-    return pos_x * side + local_x + 4;
+    // wartosc po local_x odpowiada za umieszczenie planszy na ekranie,
+    // '+' przesuwa w dol, '-' w gora
+    return pos_x * side + local_x + 0;
 }
 
 int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
@@ -30,7 +32,9 @@ int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
         return -1;
     }
     const int local_y = pointer / side;
-    return pos_y * side + local_y + 1;
+    return pos_y * side + local_y + 20;
+    // wartosc po local_x odpowiada za umieszczenie planszy na ekranie,
+    // '+' przesuwa w prawo, '-' w lewo
 }
 
 void GameLogic::set_Pixels_from_Block(const Block &block) {
@@ -122,8 +126,8 @@ void GameLogic::can_block_rotate() {
             int dx = block.x_ - figure_.blocks_[1].x_;
             int dy = block.y_ - figure_.blocks_[1].y_;
             int const temp = dx;
-            dx = -dy;
-            dy = temp;
+            dx = dy;
+            dy = -temp;
             if  (figure_.blocks_[1].x_ + dx >= 10) {
                 const int max = figure_.blocks_[1].x_ + dx - 9;
                 if (max > shift){shift = max;};
@@ -166,7 +170,7 @@ void refresh_window(GameLogic &game) {
             for (int x = 0; x < Game_Window_width; x++) {
                 if (game.window_.check(x, y) == true) {
                     u8g2.setDrawColor(1);
-                    u8g2.drawBox(GameLogic::Block_To_PixelX(x, 0), GameLogic::Block_To_PixelY(y, 0),
+                    u8g2.drawBox(GameLogic::Block_To_PixelX(y, 0), GameLogic::Block_To_PixelY(x, 0),
                                  static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
                 }
             }
@@ -174,7 +178,7 @@ void refresh_window(GameLogic &game) {
         for (const auto block : game.figure_.blocks_) {
             if (block.alive_ == true) {
                 u8g2.setDrawColor(1);
-                u8g2.drawBox(GameLogic::Block_To_PixelX(block.x_, 0), GameLogic::Block_To_PixelY(block.y_, 0), static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
+                u8g2.drawBox(GameLogic::Block_To_PixelX(block.y_, 0), GameLogic::Block_To_PixelY(block.x_, 0), static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
             }
         }
     }

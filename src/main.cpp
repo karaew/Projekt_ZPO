@@ -40,13 +40,13 @@ void loop() {
       char odebranyZnak = Serial.read(); // Odczytaj jeden znak
 
 
-      if (odebranyZnak == '6') {
+      if (odebranyZnak == '4') {
          digitalWrite(LED_PIN_R, HIGH);
          game.can_block_move_R();
          digitalWrite(LED_PIN_R, LOW);
          refresh_window(game);
       }
-      if (odebranyZnak == '4') {
+      if (odebranyZnak == '6') {
          digitalWrite(LED_PIN_L, HIGH);
          game.can_block_move_L();
          digitalWrite(LED_PIN_L, LOW);
