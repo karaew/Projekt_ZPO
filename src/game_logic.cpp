@@ -170,8 +170,10 @@ void refresh_window(GameLogic &game) {
             for (int x = 0; x < Game_Window_width; x++) {
                 if (game.window_.check(x, y) == true) {
                     u8g2.setDrawColor(1);
-                    u8g2.drawBox(GameLogic::Block_To_PixelX(y, 0), GameLogic::Block_To_PixelY(x, 0),
-                                 static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
+                    u8g2.drawBox(GameLogic::Block_To_PixelX(y, 0), GameLogic::Block_To_PixelY(x, 0), static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
+                    u8g2.setDrawColor(0);
+                    u8g2.drawBox(GameLogic::Block_To_PixelX(y, static_cast<int>(sqrt(size_of_Block)) + 1), GameLogic::Block_To_PixelY(x, static_cast<int>(sqrt(size_of_Block)) + 1),
+                                 static_cast<int>(sqrt(size_of_Block)) - 2, static_cast<int>(sqrt(size_of_Block)) - 2);
                 }
             }
         }
@@ -179,6 +181,9 @@ void refresh_window(GameLogic &game) {
             if (block.alive_ == true) {
                 u8g2.setDrawColor(1);
                 u8g2.drawBox(GameLogic::Block_To_PixelX(block.y_, 0), GameLogic::Block_To_PixelY(block.x_, 0), static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
+                u8g2.setDrawColor(0);
+                u8g2.drawBox(GameLogic::Block_To_PixelX(block.y_, static_cast<int>(sqrt(size_of_Block)) + 1), GameLogic::Block_To_PixelY(block.x_, static_cast<int>(sqrt(size_of_Block)) + 1),
+                             static_cast<int>(sqrt(size_of_Block)) - 2, static_cast<int>(sqrt(size_of_Block)) - 2);
             }
         }
     }
