@@ -12,7 +12,7 @@
 #include <Arduino.h>
 #include <U8g2lib.h>
 
-extern U8G2_SH1106_128X64_NONAME_1_HW_I2C u8g2;
+extern U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2;
 
 class GameLogic {
 public:
@@ -45,5 +45,7 @@ public:
 
 void refresh_window(GameLogic &game);
 void clear_lane(GameLogic &game, int row_y);
+
+void draw_frame();
 
 #endif //APLIKACJA_TETRIS_GAME_LOGIC_HPP
