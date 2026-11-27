@@ -142,22 +142,40 @@ void GameLogic::can_block_rotate() {
         }
     }
     switch (shift) {
-        case 0: figure_.rotate();
-            break;
-        case -1: figure_.move_L();
+        case 0: {
             figure_.rotate();
             break;
-        case -2: figure_.move_L();
-            figure_.move_L();
-            figure_.rotate();
+        }
+        case -1: {
+            const bool check = can_block_move_L();
+            if (check){figure_.rotate();}
             break;
-        case 1: figure_.move_R();
-            figure_.rotate();
+        }
+        case -2: {
+            const bool check_1 = can_block_move_L();
+            if (check_1) {
+                const bool check_2 = can_block_move_L();
+                if (check_2){ figure_.rotate();}
+                else {figure_.move_R();}
+            }
+                break;
+        }
+        case 1: {
+            const bool check = can_block_move_R();
+            if (check) {
+                figure_.rotate();
+                break;
+            }
+        }
+        case 2: {
+            const bool check_1 = can_block_move_R();
+            if (check_1) {
+                const bool check_2 = can_block_move_R();
+                if (check_2){ figure_.rotate();}
+                else {figure_.move_L();}
+            }
             break;
-        case 2 :
-            figure_.move_R();
-            figure_.move_R();
-            figure_.rotate();
+        }
         default : break;
     }
 }

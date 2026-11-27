@@ -29,6 +29,9 @@ class Figure {
     void move_L();
     void move_R();
     void rotate();
+
+    void kill_blocks();
+    void alive_blocks();
 };
 
 
