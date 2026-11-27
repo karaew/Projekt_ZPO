@@ -6,8 +6,8 @@
 #define PROJEKT_ZPO_WINDOW_HPP
 
 
-#define Window_width 128
-#define Window_height 64
+#define Window_width 64
+#define Window_height 128
 #define Game_Window_width 10
 #define Game_Window_height 20
 #include <stdint.h>

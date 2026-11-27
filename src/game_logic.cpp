@@ -16,30 +16,47 @@ int GameLogic::PixelToBlockY(int const pos_y) {
 }
 
 int GameLogic::Block_To_PixelX(int const pos_x, int const pointer) {
-    const int side = static_cast<int>(sqrt(size_of_Block));
     if (pointer < 0 || pointer >= size_of_Block) {
         return -1;
     }
-    const int local_x = pointer % side;
+    const int local_x = pointer % size_of_Block_side;
     // wartosc po local_x odpowiada za umieszczenie planszy na ekranie,
-    // '+' przesuwa w dol, '-' w gora
-    return pos_x * side + local_x + 4;
+    // '+' przesuwa w prawo, '-' w lewo
+    return pos_x * size_of_Block_side + local_x + 4;
 }
 
 int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
-    const int side = static_cast<int>(sqrt(size_of_Block));
     if (pointer < 0 || pointer >= size_of_Block) {
         return -1;
     }
-    const int local_y = pointer / side;
-    return pos_y * side + local_y + 20;
-    // wartosc po local_x odpowiada za umieszczenie planszy na ekranie,
-    // '+' przesuwa w prawo, '-' w lewo
+    const int local_y = pointer / size_of_Block_side;
+    return pos_y * size_of_Block_side + local_y + 4;
+    // wartosc po local_y odpowiada za umieszczenie planszy na ekranie,
+    // '+' przesuwa w dol, '-' w gore
 }
 
 void GameLogic::set_Pixels_from_Block(const Block &block) {
     window_.set(block.x_, block.y_, true);
 }
+
+void GameLogic::display_next_figure() {
+    for (const auto &it : next_figure_.blocks_) {
+        const int pos_x = GameLogic::Block_To_PixelX(it.x_, 0) + 28;
+        const int pos_y = GameLogic::Block_To_PixelY(it.y_, 0);
+        u8g2.setDrawColor(1);
+        u8g2.drawBox(pos_x, pos_y, size_of_Block_side, size_of_Block_side);
+        u8g2.setDrawColor(0);
+        u8g2.drawBox(pos_x + 1, pos_y + 1, size_of_Block_side - 2, size_of_Block_side - 2);
+    }
+}
+
+void GameLogic::new_figure() {
+    figure_ = next_figure_;
+    figure_.alive_blocks();
+    next_figure_ = Figure(types[random(0,7)]);
+    next_figure_.kill_blocks();
+}
+
 
 void clear_lane(GameLogic &game) {
     for (int y = 0; y < Game_Window_height; y++) {
@@ -93,7 +110,7 @@ void GameLogic::can_block_fall(int const time) {
 bool GameLogic::can_block_move_R() {
     bool check = true;
     for (const auto &block : figure_.blocks_) {
-        if (window_.check(block.x_ - 1, block.y_) == true || block.x_ <= 0) {
+        if (window_.check(block.x_ - 1, block.y_) == true || block.x_ >= 9) {
             check = false;
             break;
         }
@@ -107,7 +124,7 @@ bool GameLogic::can_block_move_R() {
 bool GameLogic::can_block_move_L() {
     bool check = true;
     for (const auto & block : figure_.blocks_) {
-        if (window_.check(block.x_ + 1, block.y_) == true || block.x_ >= 9) {
+        if (window_.check(block.x_ + 1, block.y_) == true || block.x_ <= 0) {
             check = false;
             break;
         }
@@ -126,8 +143,8 @@ void GameLogic::can_block_rotate() {
             int dx = block.x_ - figure_.blocks_[1].x_;
             int dy = block.y_ - figure_.blocks_[1].y_;
             int const temp = dx;
-            dx = dy;
-            dy = -temp;
+            dx = -dy;
+            dy = temp;
             if  (figure_.blocks_[1].x_ + dx >= 9) {
                 const int max = figure_.blocks_[1].x_ + dx - 9;
                 if (max > shift){shift = max;};
@@ -139,6 +156,7 @@ void GameLogic::can_block_rotate() {
             if (window_.check(figure_.blocks_[1].x_ + dx, figure_.blocks_[1].y_ + dy) == true) {
                 shift = -3;
             }
+            if (figure_.blocks_[1].y_ + dy >= 19 || figure_.blocks_[1].y_ + dy <= 0) {shift = -3;}
         }
     }
     switch (shift) {
@@ -146,12 +164,12 @@ void GameLogic::can_block_rotate() {
             figure_.rotate();
             break;
         }
-        case -1: {
+        case 1: {
             const bool check = can_block_move_L();
             if (check){figure_.rotate();}
             break;
         }
-        case -2: {
+        case 2: {
             const bool check_1 = can_block_move_L();
             if (check_1) {
                 const bool check_2 = can_block_move_L();
@@ -160,14 +178,14 @@ void GameLogic::can_block_rotate() {
             }
                 break;
         }
-        case 1: {
+        case -1: {
             const bool check = can_block_move_R();
             if (check) {
                 figure_.rotate();
                 break;
             }
         }
-        case 2: {
+        case -2: {
             const bool check_1 = can_block_move_R();
             if (check_1) {
                 const bool check_2 = can_block_move_R();
@@ -186,21 +204,19 @@ void draw_frame() {
     u8g2.setDrawColor(1);
     u8g2.drawBox(0, 0, Window_width, Window_height);
     u8g2.setDrawColor(0);
-    u8g2.drawBox(static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)),
-                 Window_width - 2 * static_cast<int>(sqrt(size_of_Block)),
-                 Window_height - 2 * static_cast<int>(sqrt(size_of_Block)));
+    u8g2.drawBox(size_of_Block_side, size_of_Block_side,
+                 Window_width - 2 * size_of_Block_side,
+                 Window_height - 2 * size_of_Block_side);
     //rysowanie ramki dla calego ekranu
 
     u8g2.setDrawColor(1);
-    u8g2.drawBox(static_cast<int>(sqrt(size_of_Block)),
-        Window_height - Game_Window_width * static_cast<int>(sqrt(size_of_Block)) - 2 * static_cast<int>(sqrt(size_of_Block)),
-        Game_Window_height  * static_cast<int>(sqrt(size_of_Block)) + static_cast<int>(sqrt(size_of_Block)),
-        Game_Window_width  * static_cast<int>(sqrt(size_of_Block)) + static_cast<int>(sqrt(size_of_Block)) + static_cast<int>(sqrt(size_of_Block)));
+    u8g2.drawBox(0, 0,(Game_Window_width + 2) * size_of_Block_side,
+        (Game_Window_height + 2)  * size_of_Block_side);
     u8g2.setDrawColor(0);
-    u8g2.drawBox(static_cast<int>(sqrt(size_of_Block)),
-        Window_height - Game_Window_width * static_cast<int>(sqrt(size_of_Block)) - static_cast<int>(sqrt(size_of_Block)),
-        Game_Window_height  * static_cast<int>(sqrt(size_of_Block)),
-        Game_Window_width  * static_cast<int>(sqrt(size_of_Block)));
+    u8g2.drawBox(size_of_Block_side, size_of_Block_side,
+        Game_Window_width * size_of_Block_side,
+        Game_Window_height * size_of_Block_side);
+    // rysowanie ramki dla planszy gry
 }
 
 
@@ -211,22 +227,23 @@ void refresh_window(GameLogic &game) {
         for (int x = 0; x < Game_Window_width; x++) {
             if (game.window_.check(x, y) == true) {
                 u8g2.setDrawColor(1);
-                u8g2.drawBox(GameLogic::Block_To_PixelX(y, 0), GameLogic::Block_To_PixelY(x, 0), static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
+                u8g2.drawBox(GameLogic::Block_To_PixelX(x, 0), GameLogic::Block_To_PixelY(y, 0), size_of_Block_side, size_of_Block_side);
                 u8g2.setDrawColor(0);
-                u8g2.drawBox(GameLogic::Block_To_PixelX(y, static_cast<int>(sqrt(size_of_Block)) + 1), GameLogic::Block_To_PixelY(x, static_cast<int>(sqrt(size_of_Block)) + 1),
-                    static_cast<int>(sqrt(size_of_Block)) - 2, static_cast<int>(sqrt(size_of_Block)) - 2);
+                u8g2.drawBox(GameLogic::Block_To_PixelX(x, size_of_Block_side + 1), GameLogic::Block_To_PixelY(y, size_of_Block_side + 1),
+                    size_of_Block_side - 2, size_of_Block_side - 2);
             }
         }
     }
     for (const auto block : game.figure_.blocks_) {
         if (block.alive_ == true) {
             u8g2.setDrawColor(1);
-            u8g2.drawBox(GameLogic::Block_To_PixelX(block.y_, 0), GameLogic::Block_To_PixelY(block.x_, 0), static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
+            u8g2.drawBox(GameLogic::Block_To_PixelX(block.x_, 0), GameLogic::Block_To_PixelY(block.y_, 0), size_of_Block_side, size_of_Block_side);
             u8g2.setDrawColor(0);
-            u8g2.drawBox(GameLogic::Block_To_PixelX(block.y_, static_cast<int>(sqrt(size_of_Block)) + 1), GameLogic::Block_To_PixelY(block.x_, static_cast<int>(sqrt(size_of_Block)) + 1),
-                static_cast<int>(sqrt(size_of_Block)) - 2, static_cast<int>(sqrt(size_of_Block)) - 2);
+            u8g2.drawBox(GameLogic::Block_To_PixelX(block.x_, size_of_Block_side + 1), GameLogic::Block_To_PixelY(block.y_, size_of_Block_side + 1),
+                size_of_Block_side - 2, size_of_Block_side - 2);
         }
     }
+    game.display_next_figure();
     u8g2.sendBuffer();
 }
 

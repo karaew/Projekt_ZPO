@@ -41,12 +41,8 @@ public:
 
     void can_block_rotate();
 
-    void new_figure() {
-        figure_ = next_figure_;
-        figure_.alive_blocks();
-        next_figure_ = Figure(types[random(0,7)]);
-        next_figure_.kill_blocks();
-    };
+    void display_next_figure();
+    void new_figure();
 };
 
 void refresh_window(GameLogic &game);

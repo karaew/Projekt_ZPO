@@ -62,7 +62,7 @@ void Figure::move_L() {
 
     for (auto &block : blocks_) {
         if (block.alive_) {
-        block.x_ = block.x_ + 1;
+        block.x_ = block.x_ - 1;
         }
     }
 };
@@ -70,7 +70,7 @@ void Figure::move_L() {
 void Figure::move_R() {
     for (auto &block : blocks_) {
         if (block.alive_) {
-            block.x_ = block.x_ - 1;
+            block.x_ = block.x_ + 1;
         }
     }
 };
@@ -82,8 +82,8 @@ void Figure::rotate() {
                 int dx = block.x_ - blocks_[1].x_;
                 int dy = block.y_ - blocks_[1].y_;
                 int const temp = dx;
-                dx = dy;
-                dy = -temp;
+                dx = -dy;
+                dy = temp;
                 block.x_ = blocks_[1].x_ + dx;
                 block.y_ = blocks_[1].y_ + dy;
             }
@@ -92,13 +92,13 @@ void Figure::rotate() {
 }
 
 void Figure::kill_blocks() {
-    for (auto &block : blocks_) {
-        blocks_->alive_ = false;
+    for (const auto &block : blocks_) {
+        block.alive_ = false;
     }
 }
 
 void Figure::alive_blocks() {
-    for (auto &block : blocks_) {
-        blocks_->alive_ = true;
+    for (const auto &block : blocks_) {
+        block.alive_ = true;
     }
 }

@@ -6,6 +6,7 @@
 #define PROJEKT_ZPO_SIATKA_HPP
 
 #define size_of_Block 16 // z ilu pikseli sklada sie block
+#define size_of_Block_side 4
 #define change_time 3
 
 class Block {
