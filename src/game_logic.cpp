@@ -41,7 +41,7 @@ void GameLogic::set_Pixels_from_Block(const Block &block) {
 
 void GameLogic::display_next_figure() {
     for (const auto &it : next_figure_.blocks_) {
-        const int pos_x = GameLogic::Block_To_PixelX(it.x_, 0) + 32;
+        const int pos_x = GameLogic::Block_To_PixelX(it.x_, 0) + 31;
         const int pos_y = GameLogic::Block_To_PixelY(it.y_, 0) + 32;
         // dodawanie do zmiennych pos_x, pos_y w celu ustawienia pozycji pokazywania sie nastepnych figur
         u8g2.setDrawColor(1);
@@ -116,7 +116,7 @@ void GameLogic::can_block_fall(int const time) {
 bool GameLogic::can_block_move_R() {
     bool check = true;
     for (const auto &block : figure_.blocks_) {
-        if (window_.check(block.x_ - 1, block.y_) == true || block.x_ >= 9) {
+        if (window_.check(block.x_ + 1, block.y_) == true || block.x_ >= 9) {
             check = false;
             break;
         }
@@ -130,7 +130,7 @@ bool GameLogic::can_block_move_R() {
 bool GameLogic::can_block_move_L() {
     bool check = true;
     for (const auto & block : figure_.blocks_) {
-        if (window_.check(block.x_ + 1, block.y_) == true || block.x_ <= 0) {
+        if (window_.check(block.x_ - 1, block.y_) == true || block.x_ <= 0) {
             check = false;
             break;
         }
