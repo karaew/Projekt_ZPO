@@ -16,26 +16,53 @@ int GameLogic::PixelToBlockY(int const pos_y) {
 }
 
 int GameLogic::Block_To_PixelX(int const pos_x, int const pointer) {
-    const int side = static_cast<int>(sqrt(size_of_Block));
     if (pointer < 0 || pointer >= size_of_Block) {
         return -1;
     }
-    const int local_x = pointer % side;
-    return pos_x * side + local_x + 4;
+    const int local_x = pointer % size_of_Block_side;
+    // wartosc po local_x odpowiada za umieszczenie planszy na ekranie,
+    // '+' przesuwa w prawo, '-' w lewo
+    return pos_x * size_of_Block_side + local_x;
 }
 
 int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
-    const int side = static_cast<int>(sqrt(size_of_Block));
     if (pointer < 0 || pointer >= size_of_Block) {
         return -1;
     }
-    const int local_y = pointer / side;
-    return pos_y * side + local_y + 1;
+    const int local_y = pointer / size_of_Block_side;
+    return pos_y * size_of_Block_side + local_y;
+    // wartosc po local_y odpowiada za umieszczenie planszy na ekranie,
+    // '+' przesuwa w dol, '-' w gore
 }
 
 void GameLogic::set_Pixels_from_Block(const Block &block) {
     window_.set(block.x_, block.y_, true);
 }
+
+void GameLogic::display_next_figure() {
+    for (const auto &it : next_figure_.blocks_) {
+        const int pos_x = GameLogic::Block_To_PixelX(it.x_, 0) + 31;
+        const int pos_y = GameLogic::Block_To_PixelY(it.y_, 0) + 32;
+        // dodawanie do zmiennych pos_x, pos_y w celu ustawienia pozycji pokazywania sie nastepnych figur
+        u8g2.setDrawColor(1);
+        u8g2.drawBox(pos_x, pos_y, size_of_Block_side, size_of_Block_side);
+        u8g2.setDrawColor(0);
+        u8g2.drawBox(pos_x + 1, pos_y + 1, size_of_Block_side - 2, size_of_Block_side - 2);
+    }
+    //wysiwetlenie napisu NEXT
+    u8g2.setFont(u8g2_font_5x7_tf);
+    u8g2.setDrawColor(1);
+    u8g2.setCursor(45, 24);
+    u8g2.print("NEXT");
+}
+
+void GameLogic::new_figure() {
+    figure_ = next_figure_;
+    figure_.alive_blocks();
+    next_figure_ = Figure(types[random(0,7)]);
+    next_figure_.kill_blocks();
+}
+
 
 void clear_lane(GameLogic &game) {
     for (int y = 0; y < Game_Window_height; y++) {
@@ -124,62 +151,97 @@ void GameLogic::can_block_rotate() {
             int const temp = dx;
             dx = -dy;
             dy = temp;
-            if  (figure_.blocks_[1].x_ + dx >= 10) {
+            if  (figure_.blocks_[1].x_ + dx >= 9) {
                 const int max = figure_.blocks_[1].x_ + dx - 9;
                 if (max > shift){shift = max;};
             }
-            if  (figure_.blocks_[1].x_ + dx < 0) {
+            if  (figure_.blocks_[1].x_ + dx <= 0) {
                 const int min = 0 + figure_.blocks_[1].x_ + dx;
                 if (min < shift) {shift = min;}
             }
             if (window_.check(figure_.blocks_[1].x_ + dx, figure_.blocks_[1].y_ + dy) == true) {
                 shift = -3;
             }
+            if (figure_.blocks_[1].y_ + dy >= 19 || figure_.blocks_[1].y_ + dy <= 0) {shift = -3;}
         }
     }
     switch (shift) {
-        case 0: figure_.rotate();
-            break;
-        case 1: figure_.move_L();
+        case 0: {
             figure_.rotate();
             break;
-        case 2: figure_.move_L();
-            figure_.move_L();
-            figure_.rotate();
+        }
+        case 1: {
+            const bool check = can_block_move_L();
+            if (check){figure_.rotate();}
             break;
-        case -1: figure_.move_R();
-            figure_.rotate();
+        }
+        case 2: {
+            const bool check_1 = can_block_move_L();
+            if (check_1) {
+                const bool check_2 = can_block_move_L();
+                if (check_2){ figure_.rotate();}
+                else {figure_.move_R();}
+            }
+                break;
+        }
+        case -1: {
+            const bool check = can_block_move_R();
+            if (check) {
+                figure_.rotate();
+                break;
+            }
+        }
+        case -2: {
+            const bool check_1 = can_block_move_R();
+            if (check_1) {
+                const bool check_2 = can_block_move_R();
+                if (check_2){ figure_.rotate();}
+                else {figure_.move_L();}
+            }
             break;
-        case -2 :
-            figure_.move_R();
-            figure_.move_R();
-            figure_.rotate();
+        }
         default : break;
     }
 }
 
 
+
+void draw_frame() {
+    u8g2.setDrawColor(1);
+    u8g2.drawBox(Game_Window_width * size_of_Block_side, 0, size_of_Block_side, Game_Window_height * size_of_Block_side);
+    //rysowanie lini pionowej oddzielajacej plansze gry od nastepnej figury
+
+    u8g2.setDrawColor(1);
+    u8g2.drawBox(0, Game_Window_height * size_of_Block_side,Window_width,size_of_Block_side);
+
+    // rysowanie lini dzielacej pionowo ekran OLED
+}
+
+
 void refresh_window(GameLogic &game) {
-    u8g2.firstPage();
-    do {
-        for (int y = 0; y < Game_Window_height; y++) {
-            for (int x = 0; x < Game_Window_width; x++) {
-                if (game.window_.check(x, y) == true) {
-                    u8g2.setDrawColor(1);
-                    u8g2.drawBox(GameLogic::Block_To_PixelX(x, 0), GameLogic::Block_To_PixelY(y, 0),
-                                 static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
-                }
-            }
-        }
-        for (const auto block : game.figure_.blocks_) {
-            if (block.alive_ == true) {
+    u8g2.clearBuffer();
+    draw_frame();
+    for (int y = 0; y < Game_Window_height; y++) {
+        for (int x = 0; x < Game_Window_width; x++) {
+            if (game.window_.check(x, y) == true) {
                 u8g2.setDrawColor(1);
-                u8g2.drawBox(GameLogic::Block_To_PixelX(block.x_, 0), GameLogic::Block_To_PixelY(block.y_, 0), static_cast<int>(sqrt(size_of_Block)), static_cast<int>(sqrt(size_of_Block)));
+                u8g2.drawBox(GameLogic::Block_To_PixelX(x, 0), GameLogic::Block_To_PixelY(y, 0), size_of_Block_side, size_of_Block_side);
+                u8g2.setDrawColor(0);
+                u8g2.drawBox(GameLogic::Block_To_PixelX(x, size_of_Block_side + 1), GameLogic::Block_To_PixelY(y, size_of_Block_side + 1),
+                    size_of_Block_side - 2, size_of_Block_side - 2);
             }
         }
     }
-    while (u8g2.nextPage());
-
+    for (const auto block : game.figure_.blocks_) {
+        if (block.alive_ == true) {
+            u8g2.setDrawColor(1);
+            u8g2.drawBox(GameLogic::Block_To_PixelX(block.x_, 0), GameLogic::Block_To_PixelY(block.y_, 0), size_of_Block_side, size_of_Block_side);
+            u8g2.setDrawColor(0);
+            u8g2.drawBox(GameLogic::Block_To_PixelX(block.x_, size_of_Block_side + 1), GameLogic::Block_To_PixelY(block.y_, size_of_Block_side + 1),
+                size_of_Block_side - 2, size_of_Block_side - 2);
+        }
+    }
+    game.display_next_figure();
+    u8g2.sendBuffer();
 }
-
 

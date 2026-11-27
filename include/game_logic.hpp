@@ -12,7 +12,7 @@
 #include <Arduino.h>
 #include <U8g2lib.h>
 
-extern U8G2_SH1106_128X64_NONAME_1_HW_I2C u8g2;
+extern U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2;
 
 class GameLogic {
 public:
@@ -20,8 +20,11 @@ public:
     Window window_;
     char types[7] {'I', 'T', 'J', 'L', 'O', 's','z'};
     Figure figure_;
+    Figure next_figure_;
 
-    GameLogic() : score_(0), figure_(types[random(0,7)]){};
+    GameLogic() : score_(0), figure_(types[random(0,7)]), next_figure_(types[random(0,7)]) {
+        next_figure_.kill_blocks();
+    };
 
     static int PixelToBlockX(int pos_x) ;
     static int PixelToBlockY(int pos_y) ;
@@ -38,12 +41,13 @@ public:
 
     void can_block_rotate();
 
-    void new_figure() {
-        figure_ = Figure(types[random(0,7)]);
-    };
+    void display_next_figure();
+    void new_figure();
 };
 
 void refresh_window(GameLogic &game);
 void clear_lane(GameLogic &game, int row_y);
+
+void draw_frame();
 
 #endif //APLIKACJA_TETRIS_GAME_LOGIC_HPP

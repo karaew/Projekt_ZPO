@@ -91,4 +91,14 @@ void Figure::rotate() {
     }
 }
 
+void Figure::kill_blocks() {
+    for (const auto &block : blocks_) {
+        block.alive_ = false;
+    }
+}
 
+void Figure::alive_blocks() {
+    for (const auto &block : blocks_) {
+        block.alive_ = true;
+    }
+}
