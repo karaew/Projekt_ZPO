@@ -62,7 +62,7 @@ void Figure::move_L() {
 
     for (auto &block : blocks_) {
         if (block.alive_) {
-        block.x_ = block.x_ - 1;
+        block.x_ = block.x_ + 1;
         }
     }
 };
@@ -70,7 +70,7 @@ void Figure::move_L() {
 void Figure::move_R() {
     for (auto &block : blocks_) {
         if (block.alive_) {
-            block.x_ = block.x_ + 1;
+            block.x_ = block.x_ - 1;
         }
     }
 };

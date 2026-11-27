@@ -93,7 +93,7 @@ void GameLogic::can_block_fall(int const time) {
 bool GameLogic::can_block_move_R() {
     bool check = true;
     for (const auto &block : figure_.blocks_) {
-        if (window_.check(block.x_ + 1, block.y_) == true || block.x_ >= 9) {
+        if (window_.check(block.x_ - 1, block.y_) == true || block.x_ <= 0) {
             check = false;
             break;
         }
@@ -107,7 +107,7 @@ bool GameLogic::can_block_move_R() {
 bool GameLogic::can_block_move_L() {
     bool check = true;
     for (const auto & block : figure_.blocks_) {
-        if (window_.check(block.x_ - 1, block.y_) == true || block.x_ <= 0) {
+        if (window_.check(block.x_ + 1, block.y_) == true || block.x_ >= 9) {
             check = false;
             break;
         }
@@ -175,12 +175,12 @@ void draw_frame() {
 
     u8g2.setDrawColor(1);
     u8g2.drawBox(static_cast<int>(sqrt(size_of_Block)),
-        Window_height - Game_Window_width * static_cast<int>(sqrt(size_of_Block)),
+        Window_height - Game_Window_width * static_cast<int>(sqrt(size_of_Block)) - 2 * static_cast<int>(sqrt(size_of_Block)),
         Game_Window_height  * static_cast<int>(sqrt(size_of_Block)) + static_cast<int>(sqrt(size_of_Block)),
         Game_Window_width  * static_cast<int>(sqrt(size_of_Block)) + static_cast<int>(sqrt(size_of_Block)) + static_cast<int>(sqrt(size_of_Block)));
     u8g2.setDrawColor(0);
     u8g2.drawBox(static_cast<int>(sqrt(size_of_Block)),
-        Window_height - Game_Window_width * static_cast<int>(sqrt(size_of_Block)) + static_cast<int>(sqrt(size_of_Block)),
+        Window_height - Game_Window_width * static_cast<int>(sqrt(size_of_Block)) - static_cast<int>(sqrt(size_of_Block)),
         Game_Window_height  * static_cast<int>(sqrt(size_of_Block)),
         Game_Window_width  * static_cast<int>(sqrt(size_of_Block)));
 }
