@@ -128,11 +128,11 @@ void GameLogic::can_block_rotate() {
             int const temp = dx;
             dx = dy;
             dy = -temp;
-            if  (figure_.blocks_[1].x_ + dx >= 10) {
+            if  (figure_.blocks_[1].x_ + dx >= 9) {
                 const int max = figure_.blocks_[1].x_ + dx - 9;
                 if (max > shift){shift = max;};
             }
-            if  (figure_.blocks_[1].x_ + dx < 0) {
+            if  (figure_.blocks_[1].x_ + dx <= 0) {
                 const int min = 0 + figure_.blocks_[1].x_ + dx;
                 if (min < shift) {shift = min;}
             }
@@ -144,17 +144,17 @@ void GameLogic::can_block_rotate() {
     switch (shift) {
         case 0: figure_.rotate();
             break;
-        case 1: figure_.move_L();
+        case -1: figure_.move_L();
             figure_.rotate();
             break;
-        case 2: figure_.move_L();
+        case -2: figure_.move_L();
             figure_.move_L();
             figure_.rotate();
             break;
-        case -1: figure_.move_R();
+        case 1: figure_.move_R();
             figure_.rotate();
             break;
-        case -2 :
+        case 2 :
             figure_.move_R();
             figure_.move_R();
             figure_.rotate();
