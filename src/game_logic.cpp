@@ -22,7 +22,7 @@ int GameLogic::Block_To_PixelX(int const pos_x, int const pointer) {
     const int local_x = pointer % size_of_Block_side;
     // wartosc po local_x odpowiada za umieszczenie planszy na ekranie,
     // '+' przesuwa w prawo, '-' w lewo
-    return pos_x * size_of_Block_side + local_x + 4;
+    return pos_x * size_of_Block_side + local_x;
 }
 
 int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
@@ -30,7 +30,7 @@ int GameLogic::Block_To_PixelY(int const pos_y, int const pointer) {
         return -1;
     }
     const int local_y = pointer / size_of_Block_side;
-    return pos_y * size_of_Block_side + local_y + 4;
+    return pos_y * size_of_Block_side + local_y;
     // wartosc po local_y odpowiada za umieszczenie planszy na ekranie,
     // '+' przesuwa w dol, '-' w gore
 }
@@ -41,13 +41,19 @@ void GameLogic::set_Pixels_from_Block(const Block &block) {
 
 void GameLogic::display_next_figure() {
     for (const auto &it : next_figure_.blocks_) {
-        const int pos_x = GameLogic::Block_To_PixelX(it.x_, 0) + 28;
-        const int pos_y = GameLogic::Block_To_PixelY(it.y_, 0);
+        const int pos_x = GameLogic::Block_To_PixelX(it.x_, 0) + 32;
+        const int pos_y = GameLogic::Block_To_PixelY(it.y_, 0) + 32;
+        // dodawanie do zmiennych pos_x, pos_y w celu ustawienia pozycji pokazywania sie nastepnych figur
         u8g2.setDrawColor(1);
         u8g2.drawBox(pos_x, pos_y, size_of_Block_side, size_of_Block_side);
         u8g2.setDrawColor(0);
         u8g2.drawBox(pos_x + 1, pos_y + 1, size_of_Block_side - 2, size_of_Block_side - 2);
     }
+    //wysiwetlenie napisu NEXT
+    u8g2.setFont(u8g2_font_5x7_tf);
+    u8g2.setDrawColor(1);
+    u8g2.setCursor(45, 24);
+    u8g2.print("NEXT");
 }
 
 void GameLogic::new_figure() {
@@ -202,21 +208,13 @@ void GameLogic::can_block_rotate() {
 
 void draw_frame() {
     u8g2.setDrawColor(1);
-    u8g2.drawBox(0, 0, Window_width, Window_height);
-    u8g2.setDrawColor(0);
-    u8g2.drawBox(size_of_Block_side, size_of_Block_side,
-                 Window_width - 2 * size_of_Block_side,
-                 Window_height - 2 * size_of_Block_side);
-    //rysowanie ramki dla calego ekranu
+    u8g2.drawBox(Game_Window_width * size_of_Block_side, 0, size_of_Block_side, Game_Window_height * size_of_Block_side);
+    //rysowanie lini pionowej oddzielajacej plansze gry od nastepnej figury
 
     u8g2.setDrawColor(1);
-    u8g2.drawBox(0, 0,(Game_Window_width + 2) * size_of_Block_side,
-        (Game_Window_height + 2)  * size_of_Block_side);
-    u8g2.setDrawColor(0);
-    u8g2.drawBox(size_of_Block_side, size_of_Block_side,
-        Game_Window_width * size_of_Block_side,
-        Game_Window_height * size_of_Block_side);
-    // rysowanie ramki dla planszy gry
+    u8g2.drawBox(0, Game_Window_height * size_of_Block_side,Window_width,size_of_Block_side);
+
+    // rysowanie lini dzielacej pionowo ekran OLED
 }
 
 
